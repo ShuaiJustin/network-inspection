@@ -1,0 +1,6 @@
+.software-update { padding: 20px; margin: 16px 0; border: 1px solid var(--border); border-radius: 12px; background: var(--card); color: var(--foreground); display: grid; gap: 12px; }
+.software-update h2 { font-size: 16px; font-weight: 600; }
+.software-update p { font-size: 13px; line-height: 1.6; }
+.software-update--floating { position: fixed; bottom: 20px; right: 24px; z-index: 35; width: min(400px, calc(100vw - 48px)); max-height: 60vh; overflow: auto; box-shadow: 0 8px 32px #0002; }
+.software-update-notes { white-space: pre-wrap; overflow-wrap: anywhere; max-height: 180px; overflow: auto; margin-top: 8px; }
+.software-update progress { width: 100%; accent-color: var(--primary); }

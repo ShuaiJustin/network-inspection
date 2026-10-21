@@ -41,6 +41,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/app/components/ui/ca
 import { Input } from "@/app/components/ui/input";
 import { api, downloadFile, restartLocalBackend } from "@/app/api-client";
 import { waitForBackend } from "@/app/backend-ready.mjs";
+import { SoftwareUpdate } from "@/app/software-update";
 import { resolveStartupSession } from "@/app/startup-session.js";
 import { activeTaskAfterDeletion, canDeleteInspectionTask, canExportInspectionReport, canRetryInspectionTask, deletableTaskIds, describeTaskDeletion, resultTaskForNavigation, taskNeedsPolling } from "@/app/task-state.js";
 import { formatInspectionItemValue, inspectionItemLabel, inspectionItemRows, inspectionReferenceText } from "@/app/inspection-items.js";
@@ -996,6 +997,7 @@ function App() {
             }}
           />}
           {page === "logs" && <LogsPage onConfirm={confirmAction} onNotice={notify} />}
+          <SoftwareUpdate settingsVisible={page === "settings"} busy={exclusiveBusy || backupInProgress || tasks.some(taskNeedsPolling)} onConfirm={confirmAction} />
         </div>
       </section>
 

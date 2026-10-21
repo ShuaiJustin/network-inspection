@@ -1,0 +1,59 @@
+name: Windows release
+on:
+  workflow_dispatch:
+    inputs:
+      publish:
+        description: Publish as latest (false keeps a draft)
+        required: true
+        default: false
+        type: boolean
+permissions:
+  contents: write
+concurrency:
+  group: windows-release
+  cancel-in-progress: false
+jobs:
+  windows:
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - uses: dtolnay/rust-toolchain@stable
+        with:
+          toolchain: stable-x86_64-pc-windows-gnu
+          targets: x86_64-pc-windows-gnu
+      - name: Install build tools
+        shell: pwsh
+        run: |
+          choco install mingw nsis wixtoolset --no-progress -y
+          Add-Content $env:GITHUB_PATH 'C:\ProgramData\chocolatey\bin'
+      - name: Test source
+        shell: pwsh
+        run: |
+          node scripts/release-tools.mjs check
+          if ($LASTEXITCODE) { exit $LASTEXITCODE }
+          npm --prefix frontend ci
+          if ($LASTEXITCODE) { exit $LASTEXITCODE }
+          npm --prefix frontend test
+          if ($LASTEXITCODE) { exit $LASTEXITCODE }
+          python -m pip install -r backend/requirements-dev.txt
+          if ($LASTEXITCODE) { exit $LASTEXITCODE }
+          $env:PYTHONPATH = 'backend'
+          python -m pytest backend/tests -q
+          if ($LASTEXITCODE) { exit $LASTEXITCODE }
+      - name: Build signed installers and publish
+        shell: pwsh
+        env:
+          TAURI_SIGNING_PRIVATE_KEY: ${{ secrets.TAURI_SIGNING_PRIVATE_KEY }}
+          TAURI_SIGNING_PRIVATE_KEY_PASSWORD: ${{ secrets.TAURI_SIGNING_PRIVATE_KEY_PASSWORD }}
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          if (-not $env:TAURI_SIGNING_PRIVATE_KEY) { throw 'Configure TAURI_SIGNING_PRIVATE_KEY in repository Actions secrets.' }
+          $version = (Get-Content src-tauri/tauri.conf.json -Raw | ConvertFrom-Json).version
+          $draft = '${{ inputs.publish }}' -ne 'true'
+          .\publish-release.ps1 -Repository '${{ github.repository }}' -NotesFile "docs/releases/$version.md" -Draft:$draft

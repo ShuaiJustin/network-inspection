@@ -10,9 +10,9 @@ from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import JSONResponse
 
 from app.db import SessionLocal, init_db
-from app.routers import adapters, auth, backup, catalog, devices, excel, logs, screenshots, settings, system, tasks
+from app.routers import adapters, auth, backup, catalog, devices, excel, logs, screenshots, settings, system, tasks, updates
 from app.routers.auth import require_session
-from app.services.maintenance import database_access_operation
+from app.services.maintenance import UpdatePreparedError, database_access_operation
 from app.services.log_maintenance import run_activity_log_cleanup
 from app.services.raw_output_maintenance import run_raw_output_cleanup
 
@@ -58,7 +58,9 @@ async def lifespan(_app: FastAPI):
                 await cleanup_task
 
 
-app = FastAPI(title="Network Inspection Tool API", version="1.0.0", lifespan=lifespan)
+from app.version import __version__
+
+app = FastAPI(title="Network Inspection Tool API", version=__version__, lifespan=lifespan)
 app.state.runtime_token = os.environ.get("INSPECTION_RUNTIME_TOKEN") or None
 init_db()
 
@@ -66,6 +68,8 @@ _SELF_GATED_ENDPOINTS = {
     ("POST", "/backup"),
     ("POST", "/system/database-restore"),
     ("POST", "/tasks"),
+    ("POST", "/system/update/prepare"),
+    ("POST", "/system/update/cancel"),
 }
 
 
@@ -103,8 +107,11 @@ async def serialize_database_restore(request: Request, call_next):
     endpoint = (request.method, request.url.path.rstrip("/") or "/")
     if request.method == "OPTIONS" or request.url.path == "/health" or endpoint in _SELF_GATED_ENDPOINTS:
         return await call_next(request)
-    async with database_access_operation():
-        return await call_next(request)
+    try:
+        async with database_access_operation():
+            return await call_next(request)
+    except UpdatePreparedError as exc:
+        return JSONResponse(status_code=exc.status_code, content={"detail": exc.detail})
 
 
 app.add_middleware(
@@ -124,6 +131,7 @@ app.add_middleware(
 )
 
 app.include_router(auth.router, prefix="/auth", tags=["auth"])
+app.include_router(updates.router, prefix="/system", tags=["system"], dependencies=[Depends(require_session)])
 app.include_router(
     devices.router, prefix="/devices", tags=["devices"], dependencies=[Depends(require_session)]
 )

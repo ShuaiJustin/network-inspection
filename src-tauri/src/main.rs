@@ -16,6 +16,9 @@ use tauri_plugin_shell::{
 };
 
 mod backend_port;
+mod app_updates;
+#[cfg(test)]
+mod updater_tests;
 
 const SIDECAR_START_ATTEMPTS: usize = 5;
 const SIDECAR_READY_TIMEOUT: Duration = Duration::from_secs(12);
@@ -726,6 +729,8 @@ fn main() {
         .plugin(tauri_plugin_shell::init())
         .plugin(tauri_plugin_dialog::init())
         .plugin(tauri_plugin_fs::init())
+        .plugin(tauri_plugin_updater::Builder::new().build())
+        .manage(app_updates::PendingUpdate::default())
         .setup(|app| {
             let runtime = Arc::new(Mutex::new(BackendRuntime::unavailable()));
             let restart = Arc::new(Mutex::new(()));
@@ -781,7 +786,7 @@ fn main() {
                 }
             }
         })
-        .invoke_handler(tauri::generate_handler![backend_config, restart_backend])
+        .invoke_handler(tauri::generate_handler![backend_config, restart_backend, app_updates::check_app_update, app_updates::download_app_update, app_updates::install_app_update])
         .run(tauri::generate_context!());
 
     if let Err(error) = result {

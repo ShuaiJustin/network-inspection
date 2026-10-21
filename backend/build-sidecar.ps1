@@ -1,7 +1,14 @@
+[CmdletBinding()]
+param([string]$Python)
 $ErrorActionPreference = "Stop"
 
 $root = Split-Path -Parent $MyInvocation.MyCommand.Path
-$bootstrapPython = Join-Path $env:LOCALAPPDATA "Programs\Python\Python311\python.exe"
+if (-not $Python) {
+    $localPython = Join-Path $env:LOCALAPPDATA 'Programs\Python\Python311\python.exe'
+    if (Test-Path -LiteralPath $localPython) { $Python = $localPython }
+    else { $Python = (Get-Command python -CommandType Application -ErrorAction Stop | Select-Object -First 1).Source }
+}
+$bootstrapPython = (Get-Command $Python -CommandType Application -ErrorAction Stop | Select-Object -First 1).Source
 $msvcTarget = "x86_64-pc-windows-msvc"
 $gnuTarget = "x86_64-pc-windows-gnu"
 $output = Join-Path $root "..\src-tauri\binaries"

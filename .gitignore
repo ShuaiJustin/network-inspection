@@ -28,6 +28,8 @@ tmp_vendor_samples/
 # Dependencies, local environments, caches and private runtime files
 **/node_modules/
 **/.venv/
+**/.venv-*/
+**/.dev-logs/
 **/venv/
 **/.pytest_cache/
 **/.ruff_cache/
