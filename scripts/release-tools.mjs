@@ -67,6 +67,7 @@ function prepare(directory, notesFile, repository) {
   const installer = installers[0];
   if (!installer.includes(`_${version}_`)) throw new Error('Installer filename version differs from project');
   const assets = fs.readdirSync(bundle).filter(n=>/\.(exe|msi)$/.test(n));
+  if (assets.some(name=>!/^[A-Za-z0-9][A-Za-z0-9._-]*$/.test(name))) throw new Error('Use ASCII installer filenames before publishing to GitHub');
   const publicKey = JSON.parse(fs.readFileSync(path.join(root,'src-tauri/tauri.conf.json'),'utf8')).plugins.updater.pubkey;
   if (!assets.some(n=>n.endsWith('.msi'))) throw new Error('MSI installer missing');
   for (const name of assets) {

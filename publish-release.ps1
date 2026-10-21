@@ -58,7 +58,11 @@ try {
         if ($installers.Count -ne 1) { throw "Expected one version $version .$extension installer." }
         foreach ($installer in $installers) {
             if (-not (Test-Path -LiteralPath ($installer.FullName + '.sig'))) { throw "Missing signature for $($installer.Name)" }
-            Copy-Item -LiteralPath $installer.FullName,($installer.FullName + '.sig') -Destination $releaseDirectory
+            # GitHub sanitizes non-ASCII asset names. Publish stable ASCII names
+            # before generating URLs; renaming does not change signed bytes.
+            $assetName = if ($extension -eq 'exe') { "network-inspection_${version}_x64-setup.exe" } else { "network-inspection_${version}_x64_zh-CN.msi" }
+            Copy-Item -LiteralPath $installer.FullName -Destination (Join-Path $releaseDirectory $assetName)
+            Copy-Item -LiteralPath ($installer.FullName + '.sig') -Destination (Join-Path $releaseDirectory ($assetName + '.sig'))
         }
     }
     & node (Join-Path $PSScriptRoot 'scripts\release-tools.mjs') prepare $releaseDirectory $NotesFile $Repository
