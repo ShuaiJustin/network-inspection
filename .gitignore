@@ -1,0 +1,50 @@
+# Runtime data and user-generated output
+backend/data/
+output/
+outputs/
+
+# Python caches and build artifacts
+**/__pycache__/
+*.py[cod]
+.pytest_cache/
+backend/.pyinstaller/
+
+# Frontend dependencies and build output
+frontend/node_modules/
+frontend/dist/
+frontend/dist-*/
+src-tauri/gen/
+
+# Rust and generated sidecar artifacts
+src-tauri/target/
+src-tauri/binaries/
+
+# Local browser/test state and research scratch files
+.playwright-cli/
+tmp_*.txt
+tmp_samples/
+tmp_vendor_samples/
+
+# Dependencies, local environments, caches and private runtime files
+**/node_modules/
+**/.venv/
+**/venv/
+**/.pytest_cache/
+**/.ruff_cache/
+**/output/
+.env
+.env.*
+!.env.example
+*.key
+*.pem
+*.db
+*.sqlite
+*.sqlite3
+*.log
+
+# Reference materials are kept locally, outside the application source upload
+figma ui/
+docs/*.zip
+docs/images/
+docs/HW_*.py
+

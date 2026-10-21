@@ -1,0 +1,40 @@
+
+  <!DOCTYPE html>
+  <html lang="zh-CN">
+    <head>
+      
+      <meta charset="UTF-8" />
+      <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+      <title>网络设备巡检</title>
+      <meta name="description" content="本机网络设备巡检工作台" />
+      <meta name="robots" content="noindex, nofollow" />
+      <link rel="icon" href="/favicon.png" type="image/png" />
+      <script src="/theme-init.js"></script>
+      <style>
+        html, body { height: 100%; margin: 0; overflow: hidden; background: #f4f6f8; }
+        html.dark, html.dark body { background: #0b0f1a; }
+        #root { height: 100%; }
+        .startup-shell { min-height: 100%; display: grid; place-items: center; background: #f4f6f8; color: #536176; font-family: "Microsoft YaHei", sans-serif; }
+        .startup-shell__body { width: 280px; display: grid; justify-items: center; gap: 10px; text-align: center; }
+        .startup-shell__mark { width: 46px; height: 46px; margin-bottom: 3px; display: grid; place-items: center; border-radius: 12px; background: #2563eb; box-shadow: 0 8px 22px rgba(37, 99, 235, .22); color: white; font-size: 20px; font-weight: 700; }
+        .startup-shell strong { color: #253247; font-size: 16px; }
+        .startup-shell small { color: #7a8798; font-size: 12px; }
+        .startup-shell__progress { width: 220px; height: 3px; margin-top: 8px; overflow: hidden; border-radius: 999px; background: #dce3eb; }
+        .startup-shell__progress span { width: 42%; height: 100%; display: block; border-radius: inherit; background: #2563eb; animation: startup-progress 1.25s ease-in-out infinite; }
+        html.dark .startup-shell { background: #0b0f1a; color: #a8bcd0; }
+        html.dark .startup-shell strong { color: #d7e5f4; }
+        html.dark .startup-shell__progress { background: #263347; }
+        @keyframes startup-progress { from { transform: translateX(-115%); } to { transform: translateX(355%); } }
+        @media (prefers-reduced-motion: reduce) { .startup-shell__progress span { width: 60%; animation: none; } }
+      </style>
+      
+    </head>
+
+    <body>
+      
+      <div id="root"><main class="startup-shell" role="status" aria-live="polite"><div class="startup-shell__body"><span class="startup-shell__mark" aria-hidden="true">巡</span><strong>正在启动网络巡检</strong><small>正在准备本机巡检服务…</small><span class="startup-shell__progress" aria-hidden="true"><span></span></span></div></main></div>
+      <script type="module" src="/src/main.tsx"></script>
+      
+    </body>
+  </html>
+  

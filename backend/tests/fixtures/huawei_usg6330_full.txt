@@ -1,0 +1,89 @@
+$ display device
+2026-08-12 13:07:59.530 +08:00
+USG6330's Device status:
+Slot  Sub Type         Online    Power      Register       Status     Role
+-------------------------------------------------------------------------------
+0     -   RPU          Present   PowerOn    Registered     Normal     Master
+1     -   FIBA         Present   PowerOn    Registered     Normal     NA
+5     -   PWR          Present   PowerOn    Registered     Normal     NA
+7     -   FAN          Present   PowerOn    Registered     Normal     NA
+
+$ display health
+-------------------------------------------------------------------------------
+ Slot  Card  Sensor SensorName       Status  Current(V)  Lower(V)    Upper(V)
+-------------------------------------------------------------------------------
+ 0     -     0      1.1V_CORE        Normal  1.1000      1.0400      1.1500
+---------------------------------------------------------------
+ Slot  Card  Sensor   Status   Current(C)  Lower(C)    Upper(C)
+---------------------------------------------------------------
+ 0     -     0        Normal   36          0           63
+       -     1        Normal   51          0           90
+ 1     -     0        Normal   31          0           63
+-------------------------------------------------------------------------------
+ Disk Usage Information:
+ System disk usage at 2026-08-12 13:07:59
+-------------------------------------------------------------------------------
+ Slot      Device    Total Memory(MB)     Used Memory(MB)    Used Percentage
+-------------------------------------------------------------------------------
+ 0         hda1:         1172                708                60%
+-------------------------------------------------------------------------------
+
+$ display alarm active
+2026-08-12 13:07:59.680 +08:00
+A/B/C/D/E/F/G/H/I/J
+A=Sequence, B=RootKindFlag(Independent|RootCause|nonRootCause)
+C=Generating time, D=Clearing time
+E=ID, F=Name, G=Level, H=State
+I=Description information for locating(Para info, Reason info)
+J=RootCause alarm sequence(Only for nonRootCause alarm)
+
+  1/Independent/2026-05-23 15:14:14+08:00/-/0xffae201c/hwPowerRemove/Warning/Start/Power is absent.(PhysicalName="PWR")
+  2/Independent/2026-05-23 15:16:05+08:00/-/0x40dd201a/hwEntityExtDevConfigurationRecovered/Warning/Start/Device configuration was recovered.
+  3/Independent/2026-05-23 15:23:34+08:00/-/0x40dd2028/hwEntityExtBootPasswordAlarm/Warning/Start/Boot password [REDACTED]
+
+$ display temperature
+                 ^
+Error: Wrong parameter found at '^' position.
+
+$ display eth-trunk
+2026-08-12 13:07:59.970 +08:00
+Info: No valid trunk in the system.
+
+$ display ospf peer brief
+2026-08-12 13:08:00.220 +08:00
+
+$ display ntp status
+2026-08-12 13:08:00.600 +08:00
+ clock status: unsynchronized
+ clock stratum: 16
+ reference clock ID: none
+ nominal frequency: 100.0000 Hz
+ actual frequency: 100.0000 Hz
+ clock precision: 2^18
+ clock offset: 0.0000 ms
+ root delay: 0.00 ms
+ root dispersion: 0.00 ms
+ peer dispersion: 0.00 ms
+ reference time: 00:00:00.000 UTC Jan 1 1900(00000000.00000000)
+
+$ display storage
+                 ^
+Error: Wrong parameter found at '^' position.
+
+$ dir
+Directory of hda1:/
+2,048,000 KB total (1,024,000 KB free)
+
+$ display startup
+2026-08-12 13:08:00.980 +08:00
+MainBoard:
+  Configured startup system software:        hda1:/usg6000.bin
+  Startup system software:                   hda1:/usg6000.bin
+  Next startup system software:              hda1:/usg6000.bin
+  Startup saved-configuration file:          hda1:/vrpcfg.cfg
+  Next startup saved-configuration file:     hda1:/vrpcfg.cfg
+  Startup license file:                      default
+
+$ compare configuration
+                 ^
+Error: Wrong parameter found at '^' position.
