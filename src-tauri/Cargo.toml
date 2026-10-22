@@ -1,6 +1,6 @@
 [package]
 name = "network-inspection"
-version = "0.1.34"
+version = "0.1.35"
 description = "Windows local network inspection client"
 authors = ["Local Operations"]
 edition = "2021"
